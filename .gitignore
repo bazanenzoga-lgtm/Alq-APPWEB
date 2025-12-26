@@ -1,0 +1,27 @@
+# Entornos virtuales (MUY IMPORTANTE)
+venv/
+.venv/
+env/
+ENV/
+
+# Archivos de Python (Caché)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Variables de entorno (Seguridad)
+.env
+.flaskenv
+
+# Base de datos (Si usas SQLite local)
+*.sqlite3
+*.db
+
+# Herramientas de edición (VS Code, PyCharm)
+.vscode/
+.idea/
+
+# Distribución / Paquetes
+dist/
+build/
+*.egg-info/
