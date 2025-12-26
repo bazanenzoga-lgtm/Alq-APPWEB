@@ -3,7 +3,6 @@ from fastapi import Depends, HTTPException
 from database import SessionLocal
 import schemas
 from fastapi import FastAPI
-from database import engine
 from database import engine, SessionLocal
 
 import models
@@ -24,14 +23,15 @@ def get_db():
     finally:
         db.close()
 
-@app.post("/register")
-def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+@app.post("/users", response_model=schemas.UserOut)
+def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     existing_user = db.query(models.User).filter(models.User.email == user.email).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="El email ya está registrado")
 
     new_user = models.User(
         email=user.email,
+        full_name=user.full_name,
         password=user.password,
         is_owner=user.is_owner
     )
@@ -40,7 +40,6 @@ def register_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     db.commit()
     db.refresh(new_user)
 
-    return {
-        "mensaje": "Usuario creado correctamente",
-        "user_id": new_user.id
-    }
+    return new_user
+    
+
