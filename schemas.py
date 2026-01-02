@@ -1,10 +1,9 @@
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 class UserBase(BaseModel):
     email: EmailStr
-    is_owner: bool
-
-
+    is_owner: bool 
 
 class UserCreate(BaseModel):
     email: str
@@ -13,10 +12,12 @@ class UserCreate(BaseModel):
     is_owner: bool
 
 class UserUpdate(BaseModel):
-    full_name: str | None = None 
-    email: EmailStr | None = None 
-    password: str | None = None
-    is_owner: bool | None = None
+    full_name: Optional [str] | None = None 
+    email: Optional [EmailStr] | None = None 
+    password: Optional [str] | None = None
+    is_owner: Optional [bool] | None = None
+
+
 
 class UserOut(UserBase):
     id: int
