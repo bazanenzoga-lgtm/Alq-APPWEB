@@ -4,7 +4,7 @@ from database import SessionLocal
 import schemas
 from fastapi import FastAPI
 from database import engine, SessionLocal
-
+from security import hash_password
 import models
 
 # Crea las tablas en la base de datos
@@ -32,7 +32,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
     new_user = models.User(
         email=user.email,
         full_name=user.full_name,
-        password=user.password,
+        password=hash_password(user.password),
         is_owner=user.is_owner
     )
 
