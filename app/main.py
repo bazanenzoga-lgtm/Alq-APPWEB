@@ -1,11 +1,8 @@
 from fastapi import FastAPI
-from sqlalchemy import Engine
-from app.db.session import SessionLocal
-from app.models.user import User
+from app.db.session import engine, Base
 from app.api.api import api_router
 
-# Crea las tablas en la base de datos
-User.metadata.create_all(bind=Engine)
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -13,11 +10,5 @@ app = FastAPI()
 def root():
     return {"mensaje": "Alq-APP funcionando 🚀"}
 
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 app.include_router(api_router, prefix="/api")

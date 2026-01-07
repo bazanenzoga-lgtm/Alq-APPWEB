@@ -1,28 +1,23 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 from typing import Optional
 
 class UserBase(BaseModel):
     email: EmailStr
-    is_owner: bool 
+    is_owner: bool = False
+    full_name: Optional[str] = None
 
-class UserCreate(BaseModel):
-    email: str
-    full_name: str  
+class UserCreate(UserBase): # Heredamos de Base para no repetir email
     password: str
-    is_owner: bool
 
 class UserUpdate(BaseModel):
-    full_name: Optional [str] | None = None 
-    email: Optional [EmailStr] | None = None 
-    password: Optional [str] | None = None
-    is_owner: Optional [bool] | None = None
+    # En Pydantic v2, usar Optional[str] = None es suficiente
+    full_name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    password: Optional[str] = None
+    is_owner: Optional[bool] = None
 
-
-
-class UserOut(UserBase):
+class UserOut(UserBase): # Heredamos de Base para que incluya email, is_owner y full_name
     id: int
 
-    class Config:
-        from_attributes = True
-
-
+    # Forma moderna (Pydantic v2) de habilitar el modo ORM
+    model_config = ConfigDict(from_attributes=True)

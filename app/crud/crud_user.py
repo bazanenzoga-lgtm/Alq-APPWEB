@@ -2,18 +2,19 @@ from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.core.security import hash_password
 from app.schemmas import schemas
+from ..db.session import get_db
 from ..models.user import User
-from app.schemmas.schemas import UserCreate
+
 
 def get_user_by_email(db: Session, email: str):
    
     return db.query(User).filter(User.email == email).first()
 
-def get_users(db: Session = Depends ()):
+def get_users(db: Session):
      return db.query(User).all()
 
 
-def create_user(user: schemas.UserCreate, db: Session = Depends()):
+def create_user(user: schemas.UserCreate, db: Session):
      existing_user = db.query(User).filter(User.email == user.email).first()
      
      new_user = User(
@@ -30,7 +31,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends()):
      return new_user
     
 
-def get_user (user_id: int, db: Session = Depends()):
+def get_user (user_id: int, db: Session):
     user = db.query(User). filter(User.id ==user_id).first()
     return user
 
@@ -39,7 +40,7 @@ def update_user(
 
     user_id: int,
     user_data: schemas.UserUpdate,
-    db: Session = Depends()
+    db: Session
 ):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
@@ -57,7 +58,7 @@ def update_user(
     db.refresh(user)
     return user
 
-def delete_user(user_id: int, db: Session = Depends()):
+def delete_user(user_id: int, db: Session):
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         return None
